@@ -5,10 +5,21 @@ import java.util.concurrent.Executors;
 
 final class PromiseRunner {
 
-    private final static ExecutorService executorService = Executors.newCachedThreadPool();
+    private static ExecutorService executor;
 
-    synchronized static <R,E> void  fulfill(PromiseImpl<R,E> promise) {
-        executorService.execute(promise::fulfill);
+    synchronized static <R, E> void fulfill(BasePromise<R, E> promise) {
+        if (executor == null) {
+            executor = Executors.newCachedThreadPool();
+        }
+        executor.execute(promise::fulfill);
+    }
+
+    static void shutdown() {
+        executor.shutdown();
+    }
+
+    static void initialize(ExecutorService executorService) {
+        executor = executorService;
     }
 
 }
