@@ -2,7 +2,52 @@
 Simple java promise mechanism implementation.
 
 # How to use
-TODO
+
+### Checked promise (allows throwing Throwables)
+
+```
+Promise.me(()->longRunningOperationThrowingThrowable())
+                .then(r -> handleResult(r), t -> handleThrowable(t));
+```
+Handling throwable is optional.
+```
+Promise.me(()->longRunningOperationThrowingThrowable())
+                .then(r -> handleResult(r));
+```
+
+### Unchecked promise (generic reject type)
+
+```
+Promise.<ResultType, ErrorType>me(c -> {
+            IntermediateResult intermediateResult = longRunningOperation();
+            if (intermediateResult.getStatus()) {
+                c.resolve(ResultType.of(intermediateResult));
+            } else {
+                c.reject(ErrorType.of(intermediateResult));
+            }
+        }).then(r -> handleResult(r), e -> handleError(e));
+```
+Again, handling error is optional.
+```
+Promise.<ResultType, ErrorType>me(c -> {
+            IntermediateResult intermediateResult = longRunningOperation();
+            if (intermediateResult.getStatus()) {
+                c.resolve(ResultType.of(intermediateResult));
+            } else {
+                c.reject(ErrorType.of(intermediateResult));
+            }
+        }).then(r -> handleResult(r));
+```
+
+# Configuration
+
+Promise4j uses ExecutorService to run promises asynchronously. You can pass in your own ExecutorService to be used when handling promises:
+```
+Promise.initialize(executorService);
+```
+By default, `Executors.newCachedThreadPool()` is used.
+
+In order to close application using Promise4j gracefully, you can use `Promise.shutdown()` to shutdown its ExecutorService.
 
 # License
 ```
