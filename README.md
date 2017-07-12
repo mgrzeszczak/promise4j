@@ -1,6 +1,22 @@
 # promise4j
 Simple java promise mechanism implementation.
 
+# Download
+
+```
+allprojects {
+    repositories {
+      ...
+      maven { url 'https://jitpack.io' }
+    }
+}
+```
+```
+dependencies {
+    compile 'com.github.mgrzeszczak:promise4j:v1.0'
+}
+```
+
 # How to use
 
 ### Checked promise (allows throwing Throwables)
