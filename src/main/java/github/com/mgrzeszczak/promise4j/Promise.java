@@ -9,8 +9,8 @@ public interface Promise {
         return new BasicPromise<>(action);
     }
 
-    static <X> SafeThen<X> me(SafeConsumer<SafeContext<X>> action) {
-        return new SafePromise<>(action);
+    static <X> CheckedThen<X> me(CheckedSupplier<X> action) {
+        return new CheckedPromise<>(action);
     }
 
     static void shutdown() {

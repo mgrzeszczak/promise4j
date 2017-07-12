@@ -2,11 +2,11 @@ package github.com.mgrzeszczak.promise4j;
 
 import java.util.function.Consumer;
 
-final class SafePromise<R> extends BasePromise<R, Throwable> implements SafeThen<R> {
+final class CheckedPromise<R> extends BasePromise<R, Throwable> implements CheckedThen<R> {
 
-    private final SafeConsumer<SafeContext<R>> action;
+    private final CheckedSupplier<R> action;
 
-    SafePromise(SafeConsumer<SafeContext<R>> action) {
+    CheckedPromise(CheckedSupplier<R> action) {
         Conditions.checkArgument(action != null, "action cannot be null");
         this.action = action;
     }
@@ -27,7 +27,7 @@ final class SafePromise<R> extends BasePromise<R, Throwable> implements SafeThen
     @Override
     protected void apply(PromiseContext<R, Throwable> context) {
         try {
-            action.accept(context);
+            context.resolve(action.get());
         } catch (Throwable t) {
             context.reject(t);
         }
