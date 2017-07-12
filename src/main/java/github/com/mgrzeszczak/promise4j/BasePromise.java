@@ -12,7 +12,7 @@ abstract class BasePromise<R, E> {
         apply(context);
         if (context.result != null) {
             onSuccess.accept(context.result);
-        } else {
+        } else if (onError != null) {
             onError.accept(context.error);
         }
     }

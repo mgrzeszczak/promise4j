@@ -2,7 +2,7 @@ package github.com.mgrzeszczak.promise4j;
 
 import java.util.function.Consumer;
 
-final class SafePromise<R> extends BasePromise<R, Exception> implements SafeThen<R>, Err<Exception> {
+final class SafePromise<R> extends BasePromise<R, Throwable> implements SafeThen<R> {
 
     private final SafeConsumer<SafeContext<R>> action;
 
@@ -12,23 +12,24 @@ final class SafePromise<R> extends BasePromise<R, Exception> implements SafeThen
     }
 
     @Override
-    public Err<Exception> then(Consumer<R> onSuccess) {
+    public void then(Consumer<R> onSuccess) {
         setOnSuccess(onSuccess);
-        return this;
-    }
-
-    @Override
-    public void err(Consumer<Exception> onError) {
-        setOnError(onError);
         PromiseRunner.fulfill(this);
     }
 
     @Override
-    protected void apply(PromiseContext<R, Exception> context) {
+    public void then(Consumer<R> onSuccess, Consumer<Throwable> onError) {
+        setOnError(onError);
+        setOnSuccess(onSuccess);
+        PromiseRunner.fulfill(this);
+    }
+
+    @Override
+    protected void apply(PromiseContext<R, Throwable> context) {
         try {
             action.accept(context);
-        } catch (Exception e) {
-            context.reject(e);
+        } catch (Throwable t) {
+            context.reject(t);
         }
     }
 }
