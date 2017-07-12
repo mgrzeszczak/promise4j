@@ -3,6 +3,7 @@ Simple java promise mechanism implementation.
 
 # Download
 
+[![](https://jitpack.io/v/mgrzeszczak/promise4j.svg)](https://jitpack.io/#mgrzeszczak/promise4j)
 ```
 allprojects {
     repositories {
